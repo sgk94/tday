@@ -39,6 +39,7 @@ export default function CreateTournamentPage() {
       alert("Failed to create tournament.");
     } finally {
       setIsLoading(false);
+      navigate("/dashboard");
     }
   };
 
@@ -111,8 +112,9 @@ export default function CreateTournamentPage() {
               type="submit"
             >
               {isLoading ? (
-                <div className="flex justify-center">
+                <div className="flex justify-center gap-2">
                   <Loader className="animate-spin" />
+                  <span>Submitting ...</span>
                 </div>
               ) : (
                 <span>Submit</span>

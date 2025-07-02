@@ -9,7 +9,7 @@ export default function Navbar({ toggleSidebar }: NavbarProps) {
   const { user } = useAuth();
   return (
     <>
-      <div className="sticky top-0 z-40 flex justify-between gap-2 bg-slate-900 p-4 text-white">
+      <div className="sticky top-0 z-40 flex justify-between gap-2 bg-gray-950 p-4 text-white shadow-md">
         <button onClick={toggleSidebar}>
           <Menu />
         </button>

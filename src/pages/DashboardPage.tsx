@@ -21,15 +21,17 @@ export default function DashboardPage() {
         </div>
       </div>
 
-      {isLoading && <Loader className="animate-spin" />}
-      {error && <p className="text-red-500">{error}</p>}
-
-      {tournaments.length === 0 && !isLoading ? (
+      {isLoading ? (
+        <div className="flex justify-center gap-2">
+          <Loader className="animate-spin" />
+          <p>Loading ...</p>
+        </div>
+      ) : error ? (
+        <p className="text-red-500">{error}</p>
+      ) : tournaments.length === 0 ? (
         <p>No Tournaments yet</p>
       ) : (
-        <>
-          <TournamentTable tournaments={tournaments} />
-        </>
+        <TournamentTable tournaments={tournaments} />
       )}
     </>
   );

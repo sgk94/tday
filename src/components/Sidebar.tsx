@@ -45,7 +45,7 @@ export default function Sidebar({ isSidebarOpen, closeSidebar }: SidebarProps) {
     <>
       <aside
         ref={sidebarRef}
-        className={`fixed left-0 top-0 z-50 flex h-full w-[200px] transform flex-col justify-between bg-slate-900 p-4 text-white transition-transform duration-300 ease-in-out ${
+        className={`fixed left-0 top-0 z-50 flex h-full w-[200px] transform flex-col justify-between bg-gray-950 p-4 text-white transition-transform duration-300 ease-in-out ${
           isSidebarOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >
