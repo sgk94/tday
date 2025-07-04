@@ -9,7 +9,7 @@ import type { User } from "firebase/auth";
 import { useEffect, useState } from "react";
 import type { ReactNode } from "react";
 import { auth } from "../firebase/config";
-import { AuthContext } from "./AuthContext"; // 👈 import context
+import { AuthContext } from "./AuthContext";
 import type { AuthContextType } from "./AuthContext";
 
 type Props = {
@@ -18,13 +18,24 @@ type Props = {
 
 export function AuthProvider({ children }: Props) {
   const [user, setUser] = useState<User | null>(null);
+  const [role, setRole] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-      setUser(currentUser);
+    const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
+      if (currentUser) {
+        const tokenResult = await currentUser.getIdTokenResult(true);
+        const roleClaim = tokenResult.claims.role;
+
+        setUser(currentUser);
+        setRole(typeof roleClaim === "string" ? roleClaim : null);
+      } else {
+        setUser(null);
+        setRole(null);
+      }
       setLoading(false);
     });
+
     return () => unsubscribe();
   }, []);
 
@@ -45,6 +56,7 @@ export function AuthProvider({ children }: Props) {
     register,
     resetPassword,
     logout,
+    role,
   };
 
   return (

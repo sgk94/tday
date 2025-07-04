@@ -9,6 +9,7 @@ import AccountPage from "./pages/AccountPage";
 import Layout from "./components/Layout";
 import CreateTournamentPage from "./pages/CreateTournamentPage";
 import EditTournamentPage from "./pages/EditTournamentPage";
+import AdminPage from "./pages/AdminPage";
 
 function App() {
   return (
@@ -23,6 +24,10 @@ function App() {
           element={<SignUpPage />}
         />
         <Route element={<Layout />}>
+          <Route
+            path="/admin"
+            element={<AdminPage />}
+          />
           <Route
             path="/tournaments"
             element={<TournamentsPage />}
