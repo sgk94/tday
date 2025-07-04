@@ -17,9 +17,10 @@ export default function TournamentTable({ tournaments }: TournamentTableProps) {
       : "N/A";
     return (
       <tr
+        key={tournament.id}
         className="cursor-pointer border-b last:border-b-0 hover:bg-neutral-100"
         onClick={() => {
-          navigate(`/tournaments/${tournament.slug}`);
+          navigate(`/tournaments/${tournament.slug}`, { state: tournament });
         }}
       >
         <td className="p-3">{tournament.name}</td>

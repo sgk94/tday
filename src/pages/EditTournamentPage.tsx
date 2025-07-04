@@ -1,13 +1,21 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { toSlug } from "../lib/toSlug";
 import type { DateRange } from "react-day-picker";
 import DatePickerField from "../components/DatePickerField";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { ChevronLeft, Loader } from "lucide-react";
 import { db } from "../firebase/config";
-import { addDoc, collection, query, where, getDocs } from "firebase/firestore";
+import { useTournamentStore } from "../store/useTournamentStore";
+import {
+  updateDoc,
+  collection,
+  query,
+  where,
+  getDocs,
+  doc,
+} from "firebase/firestore";
 
-export default function CreateTournamentPage() {
+export default function EditTournamentPage() {
   const [date, setDate] = useState<DateRange>();
   const [tournamentName, setTournamentName] = useState<string>("");
   const [location, setLocation] = useState<string>("");
@@ -15,6 +23,10 @@ export default function CreateTournamentPage() {
   const [price, setPrice] = useState<string>("");
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
+  const locationRoute = useLocation();
+  const tournament = locationRoute.state?.tournament;
+  const tournamentRef = doc(db, "tournaments", tournament.id);
+  const { updateTournamentInCache } = useTournamentStore();
 
   const slugExists = async (slug: string) => {
     const q = query(collection(db, "tournaments"), where("slug", "==", slug));
@@ -22,17 +34,39 @@ export default function CreateTournamentPage() {
     return !snapshot.empty;
   };
 
+  useEffect(() => {
+    if (tournament) {
+      setTournamentName(tournament.name || "");
+      setLocation(tournament.location || "");
+      setParticipants(String(tournament.participants || ""));
+      setPrice(String(tournament.price || ""));
+      setDate({
+        from: tournament.dateRange?.from
+          ? new Date(tournament.dateRange.from)
+          : undefined,
+        to: tournament.dateRange?.to
+          ? new Date(tournament.dateRange.to)
+          : undefined,
+      });
+    }
+  }, [tournament]);
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    const slug = toSlug(tournamentName);
+    const newSlug = toSlug(tournamentName);
+    const slugChanged = newSlug !== tournament.slug;
+
+    let exists = false;
+
+    if (slugChanged) {
+      exists = await slugExists(newSlug);
+    }
 
     e.preventDefault();
     setIsLoading(true);
 
-    const exists = await slugExists(slug);
-
     if (!exists) {
       try {
-        await addDoc(collection(db, "tournaments"), {
+        await updateDoc(tournamentRef, {
           name: tournamentName,
           location,
           participants: Number(participants),
@@ -41,9 +75,21 @@ export default function CreateTournamentPage() {
             from: date?.from?.toISOString() || null,
             to: date?.to?.toISOString() || null,
           },
-          createdAt: new Date().toISOString(),
           isActive: true,
-          slug: slug,
+          slug: newSlug,
+        });
+
+        updateTournamentInCache(tournament.id, {
+          name: tournamentName,
+          location,
+          participants: Number(participants),
+          price: Number(price),
+          dateRange: {
+            from: date?.from?.toISOString() || null,
+            to: date?.to?.toISOString() || null,
+          },
+          isActive: true,
+          slug: newSlug,
         });
       } catch (error) {
         console.error("error adding document: ", error);
@@ -70,7 +116,7 @@ export default function CreateTournamentPage() {
           </div>
         </button>
         <h1 className="mb-2 mt-2 flex justify-center text-xl">
-          Create New Tournament
+          Edit Tournament
         </h1>
         <div className="flex justify-center">
           <form

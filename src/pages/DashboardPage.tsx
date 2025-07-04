@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useTournamentStore } from "../store/useTournamentStore";
-import { Loader } from "lucide-react";
+import { Loader, Plus } from "lucide-react";
 import TournamentTable from "../components/TournamentTable";
 
 export default function DashboardPage() {
@@ -15,9 +15,13 @@ export default function DashboardPage() {
 
   return (
     <>
-      <div className="mb-[30px] flex justify-end">
+      <div className="mb-[10px] mt-[20px] flex justify-end">
         <div className="flex h-[35px] w-[200px] items-center justify-center rounded-md bg-blue-700 text-white hover:bg-blue-800">
-          <Link to="/tournaments/create">Create New Tournament</Link>
+          <Link to="/tournaments/create">
+            <div className="flex gap-2">
+              <Plus /> Create Tournament
+            </div>
+          </Link>
         </div>
       </div>
 

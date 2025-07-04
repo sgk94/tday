@@ -1,9 +1,4 @@
-import {
-  BrowserRouter as Router,
-  Routes,
-  Route,
-  Navigate,
-} from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import LoginPage from "./pages/LoginPage";
 import SignUpPage from "./pages/SignUpPage";
 import DashboardPage from "./pages/DashboardPage";
@@ -13,6 +8,7 @@ import TournamentPage from "./pages/TournamentPage";
 import AccountPage from "./pages/AccountPage";
 import Layout from "./components/Layout";
 import CreateTournamentPage from "./pages/CreateTournamentPage";
+import EditTournamentPage from "./pages/EditTournamentPage";
 
 function App() {
   return (
@@ -34,6 +30,10 @@ function App() {
           <Route
             path="/tournaments/:slug"
             element={<TournamentPage />}
+          />
+          <Route
+            path="/tournaments/:slug/edit"
+            element={<EditTournamentPage />}
           />
           <Route
             path="/tournaments/create"
