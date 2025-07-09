@@ -9,6 +9,7 @@ export default function SignUpPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [role, setRole] = useState("");
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -26,14 +27,14 @@ export default function SignUpPage() {
   return (
     <form
       onSubmit={handleSubmit}
-      className="max-w-sm mx-auto mt-12 p-4 border rounded space-y-4"
+      className="mx-auto mt-12 max-w-sm space-y-4 rounded border p-4"
     >
       <h2 className="text-xl font-semibold">Create an account</h2>
 
       <input
         type="email"
         placeholder="Email"
-        className="w-full border p-2 rounded"
+        className="w-full rounded border p-2"
         value={email}
         onChange={(e) => setEmail(e.target.value)}
         required
@@ -42,17 +43,17 @@ export default function SignUpPage() {
       <input
         type="password"
         placeholder="Password"
-        className="w-full border p-2 rounded"
+        className="w-full rounded border p-2"
         value={password}
         onChange={(e) => setPassword(e.target.value)}
         required
       />
 
-      {error && <p className="text-red-500 text-sm">{error}</p>}
+      {error && <p className="text-sm text-red-500">{error}</p>}
 
       <button
         type="submit"
-        className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700"
+        className="w-full rounded bg-blue-600 py-2 text-white hover:bg-blue-700"
       >
         Sign Up
       </button>

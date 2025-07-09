@@ -1,106 +1,104 @@
-# ⚛️ React + Firebase Auth Starter Kit
+# 🥋 T Day - Taekwondo Tournament Organizer
 
-A minimal, production-ready boilerplate for Firebase Authentication (Email/Password) with React, React Router, and Tailwind CSS.  
-Perfect for quickly bootstrapping SaaS apps, dashboards, or membership portals.
+**T Day** is a web-based platform for organizing and managing Taekwondo tournaments. It helps event coordinators streamline registration, bracket management, and day-of logistics with minimal technical overhead.
 
----
-
-## 🚀 Features
-
-- 🔐 Firebase Auth (Email/Password)
-- ⚛️ React 19 + TypeScript
-- 🛡 Protected routes with React Router
-- 🌐 Context-based global auth state
-- 🎨 TailwindCSS v3 styling
-- 🔍 Type-safe, minimal, and extensible
-- 🚪 Logout, redirects, and error handling
+Built using React, Firebase, and Tailwind CSS.
 
 ---
 
-## 📦 Tech Stack
+## ⚙️ Tech Stack
 
-- [React 19](https://reactjs.org/)
-- [TypeScript](https://www.typescriptlang.org/)
-- [Firebase](https://firebase.google.com/)
-- [React Router v6](https://reactrouter.com/)
-- [Tailwind CSS v3](https://tailwindcss.com/)
-- [Vite](https://vitejs.dev/)
-
----
-
-## 🛠️ Getting Started
-
-1. **Clone or download** the project.
-
-2. **Install dependencies**
-
-   This project uses [Vite](https://vitejs.dev/) — no extra config needed:
-
-   ```bash
-   npm install
-   ```
-
-3. **Set up Firebase**
-
-   - Visit the [Firebase Console](https://console.firebase.google.com/)
-   - Create a new project
-   - Enable **Email/Password** auth under **Authentication → Sign-in method**
-   - Add the following to a `.env` file in your project root:
-
-     ```env
-     VITE_FIREBASE_API_KEY=your-api-key
-     VITE_FIREBASE_AUTH_DOMAIN=your-auth-domain
-     VITE_FIREBASE_PROJECT_ID=your-project-id
-     VITE_FIREBASE_STORAGE_BUCKET=your-storage-bucket
-     VITE_FIREBASE_MESSAGING_SENDER_ID=your-messaging-sender-id
-     VITE_FIREBASE_APP_ID=your-app-id
-     ```
-
-4. **Start the local dev server**
-
-   ```bash
-   npm run dev
-   ```
+- 🧩 **Frontend**: React (with Vite)
+- 🎨 **Styling**: Tailwind CSS
+- 🗂️ **State Management**: Zustand
+- 🔐 **Authentication**: Firebase Auth
+- 🔥 **Database**: Firestore
+- 🛠 **Backend**: Firebase Cloud Functions (Node 24 via Blaze plan)
+- 🛡 **Role-Based Access**: Firebase Auth Custom Claims
+- 🌐 **Hosting**: Firebase Hosting (optional)
+- 🖼 **Icons**: Lucide React
 
 ---
 
-## 📄 Pages + Features
+## 🗃 Project Structure
 
-- `/login` – sign in with email/password
-- `/register` – create a new account
-- `/dashboard` – protected route (redirects if not logged in)
-- `PrivateRoute` – reusable route guard
-- `AuthContext` – global auth state and methods
-
----
-
-## 🗂 Folder Structure
-
-```txt
+```
 src/
-├── context/
-│   ├── AuthContext.tsx
-│   └── AuthProvider.tsx
-├── firebase/
-│   └── config.ts
-├── pages/
-│   ├── Dashboard.tsx
-│   ├── Login.tsx
-│   └── Register.tsx
-├── routes/
-│   └── PrivateRoute.tsx
-├── App.tsx
+├── components/         # Reusable UI components
+├── context/            # AuthContext for user & claims
+├── pages/              # Route-based page components
+├── routes/             # ProtectedRoute guards
+├── store/              # Zustand state
+├── utils/              # Utility functions
 ```
 
 ---
 
-## 📜 License
+## ✨ Features
 
-MIT — free to use for personal and commercial projects.
+- 🔐 Role-based login and access using Firebase Custom Claims
+- 📝 Create, edit, and view tournament data
+- ⚡ Real-time Firestore updates
+- 💾 Local state caching with Zustand
+- 🧭 Organizer dashboard interface
+- 🧱 Planned: bracket editing, check-in flows, and more
 
 ---
 
-## ✨ Author
+## 🛠 Local Development
 
-Made with 💻 by **sgk94**  
-Feel free to [reach out](mailto:kimsha004@gmail.com) with questions, feedback, or custom requests!
+1. **Clone the repo**
+
+```
+git clone https://github.com/sgk94/t-day.git
+cd t-day
+npm install
+```
+
+2. **Firebase setup**
+
+- 🔧 Create a Firebase project
+- ✅ Enable Authentication (Email/Password)
+- 🔥 Enable Firestore
+- ⚙️ Enable Cloud Functions (Blaze plan)
+- 🧾 Add Firebase config to `src/firebase.ts` or use environment variables
+
+3. **Start the dev server**
+
+```
+npm run dev
+```
+
+---
+
+## 👥 Role Management
+
+To assign roles like **organizer**, use the Firebase Admin SDK or a Cloud Function:
+
+```js
+// Example using Firebase Admin SDK
+admin.auth().setCustomUserClaims(uid, {
+  role: "organizer",
+});
+```
+
+Roles are read via `AuthContext` and used in route guards to restrict access.
+
+---
+
+## 🗺 Roadmap
+
+- [x] 📝 Tournament creation form (`/tournaments/create`)
+- [x] 🛡 Role-based access with Firebase Custom Claims
+- [x] 🧠 AuthContext with claim handling
+- [ ] 🧮 Live bracket updates and real-time match editing
+- [ ] ✅ Competitor self check-in portal
+- [ ] 🧑‍💼 Organizer control panel/dashboard
+- [ ] 🖨 Printable certificates and results reports
+- [ ] 📴 Offline support for check-in and scoring
+
+---
+
+## 📄 License
+
+MIT © Shawn Kim
