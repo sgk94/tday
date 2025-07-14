@@ -1,10 +1,9 @@
 import { useAuth } from "../context/AuthContext";
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 
 export default function LoginPage() {
-  const auth = useAuth();
-  const { user, role } = useAuth();
+  const { user, role, login, loading } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
@@ -13,20 +12,26 @@ export default function LoginPage() {
     e.preventDefault();
 
     try {
-      await auth.login(email, password);
+      await login(email, password);
     } catch (error) {
       console.error("Login failed:", error);
     }
   };
 
   useEffect(() => {
+    if (loading) return;
     if (user && role) {
       navigate("/dashboard");
+    } else if (user && !role) {
+      navigate("/role");
     }
-  }, [user, role, navigate]);
+  }, [user, role, navigate, loading]);
 
   return (
     <>
+      <span>
+        Don't have an account? <Link to="/signup">Sign Up</Link>
+      </span>
       <form
         onSubmit={handleSubmit}
         className="mx-auto mt-12 max-w-sm space-y-4 rounded border p-4"

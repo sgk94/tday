@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useAuth } from "../context/AuthContext";
 import { toSlug } from "../lib/toSlug";
 import type { DateRange } from "react-day-picker";
 import DatePickerField from "../components/DatePickerField";
@@ -15,6 +16,7 @@ export default function CreateTournamentPage() {
   const [price, setPrice] = useState<string>("");
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
+  const { user } = useAuth();
 
   const slugExists = async (slug: string) => {
     const q = query(collection(db, "tournaments"), where("slug", "==", slug));
@@ -23,6 +25,11 @@ export default function CreateTournamentPage() {
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    if (!user) {
+      alert("You must be signed in");
+      return;
+    }
+
     const slug = toSlug(tournamentName);
 
     e.preventDefault();
@@ -44,6 +51,7 @@ export default function CreateTournamentPage() {
           createdAt: new Date().toISOString(),
           isActive: true,
           slug: slug,
+          organizerIds: [user.uid],
         });
       } catch (error) {
         console.error("error adding document: ", error);

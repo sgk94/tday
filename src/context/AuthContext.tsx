@@ -3,7 +3,7 @@ import { createContext, useContext } from "react";
 import type { User, UserCredential } from "firebase/auth";
 
 export type AuthContextType = {
-  user: User | null;
+  user: User | null | undefined;
   loading: boolean;
   login: (email: string, password: string) => Promise<UserCredential>;
   register: (email: string, password: string) => Promise<UserCredential>;

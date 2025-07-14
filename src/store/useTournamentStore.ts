@@ -1,6 +1,6 @@
 import { create } from "zustand";
-import { collection, getDocs } from "firebase/firestore";
-import { db } from "../firebase/config";
+import { collection, getDocs, query, where } from "firebase/firestore";
+import { db, auth } from "../firebase/config";
 import type { Tournament } from "../types/tournament";
 
 export type TournamentStore = {
@@ -33,7 +33,15 @@ export const useTournamentStore = create<TournamentStore>((set, get) => ({
   fetchTournaments: async () => {
     set({ isLoading: true, error: null });
     try {
-      const snapshot = await getDocs(collection(db, "tournaments"));
+      const uid = auth.currentUser?.uid;
+      if (!uid) throw new Error("No user");
+      const q = query(
+        collection(db, "tournaments"),
+        where("organizerIds", "array-contains", uid) // array-contains for organizerIds
+      );
+
+      const snapshot = await getDocs(q);
+
       const data: Tournament[] = snapshot.docs.map((doc) => {
         const tournament = doc.data();
         return {

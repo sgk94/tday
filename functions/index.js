@@ -12,17 +12,39 @@ initializeApp();
 // Callable function to set a user's role (admin-only)
 exports.setUserRole = onCall(async (request) => {
   const { uid, role } = request.data;
-  const requester = request.auth;
 
-  if (!requester || requester.token.role !== "admin") {
-    throw new HttpsError("Permission denied: only admins can assign roles.");
+  if (!request.auth) {
+    throw new HttpsError("unauthenticated", "You must be signed in.");
   }
 
-  const validRoles = ["admin", "organizer", "viewer"];
+  const validRoles = ["admin", "organizer", "competitor"];
+
   if (!validRoles.includes(role)) {
-    throw new HttpsError(`Invalid role: ${role}`);
+    throw new HttpsError("invalid-argument", `Invalid role: ${role}`);
   }
 
-  await getAuth().setCustomUserClaims(uid, { role });
-  return { message: `Role '${role}' successfully set for user ${uid}.` };
+  const targetUid = uid || request.auth.uid; // fall back to caller
+  const selfEdit = targetUid === request.auth.uid;
+  const isAdmin = request.auth.token.role === "admin";
+
+  if (selfEdit) {
+    if (role === "admin") {
+      throw new HttpsError(
+        "permission-denied",
+        "You can’t grant yourself admin."
+      );
+    }
+    // Organizer / competitor are fine → continue
+  } else {
+    // Editing someone else
+    if (!isAdmin) {
+      throw new HttpsError(
+        "permission-denied",
+        "Only admins can edit other users."
+      );
+    }
+  }
+
+  await getAuth().setCustomUserClaims(targetUid, { role });
+  return { message: `Role '${role}' successfully set for user ${targetUid}.` };
 });
